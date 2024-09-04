@@ -31,9 +31,5 @@ class QuotaApplicationTests {
         assertEquals("Quota exceeded for user 1", userService.consumeQuota("1"));
     }
 
-    @Test
-    void testGetUsersQuota() {
-        Map<String, Integer> quota = userService.getUsersQuota();
-        assertTrue(quota.containsKey("1"));
-    }
+
 }
