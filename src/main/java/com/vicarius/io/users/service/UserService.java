@@ -34,7 +34,7 @@ public class UserService {
     }
 
     // Quota Functions
-    public String consumeQuota(String userId) {
+    public synchronized String consumeQuota(String userId) {
         if (!userQuota.containsKey(userId)) {
             userQuota.put(userId, 0);
         }
@@ -48,7 +48,7 @@ public class UserService {
         }
     }
 
-    public Map<String, Integer> getUsersQuota() {
+    public synchronized Map<String, Integer> getUsersQuota() {
         return userQuota;
     }
 
