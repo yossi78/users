@@ -1,41 +1,36 @@
 package com.vicarius.io.users.service;
 import com.vicarius.io.users.model.User;
-import com.vicarius.io.users.repository.UserRepository;
+import com.vicarius.io.users.repository.UserRepositoryManager;
 import org.springframework.stereotype.Service;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final UserRepositoryManager userRepositoryManager;
     private Map<String, Integer> userQuota = new HashMap<>();
     private static final int MAX_QUOTA = 5;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserService(UserRepositoryManager userRepositoryManager) {
+        this.userRepositoryManager = userRepositoryManager;
     }
 
     // CRUD Operations
     public User createUser(User user) {
-        return userRepository.save(user);
+        return userRepositoryManager.save(user);
     }
 
     public User getUser(String userId) {
-        return userRepository.findById(userId).orElse(null);
+        return userRepositoryManager.findById(userId);
     }
 
     public User updateUser(String userId, User updatedUser) {
-        if (userRepository.existsById(userId)) {
-            updatedUser.setId(userId);
-            return userRepository.save(updatedUser);
-        }
-        return null;
+        return userRepositoryManager.existById(userId,updatedUser);
     }
 
     public void deleteUser(String userId) {
-        userRepository.deleteById(userId);
+        userRepositoryManager.deleteById(userId);
     }
 
     // Quota Functions
@@ -57,23 +52,5 @@ public class UserService {
         return userQuota;
     }
 
-    public void handleElasticSearchOperations() {
-        System.out.println("Handling ElasticSearch operations (print-only)");
-    }
 
-    public void handleMySqlOperations() {
-        System.out.println("Handling MySQL operations");
-    }
-
-    public void handleDataSource() {
-        LocalTime now = LocalTime.now();
-        LocalTime startOfDay = LocalTime.of(9, 0);
-        LocalTime endOfDay = LocalTime.of(17, 0);
-
-        if (now.isAfter(startOfDay) && now.isBefore(endOfDay)) {
-            handleMySqlOperations();
-        } else {
-            handleElasticSearchOperations();
-        }
-    }
 }
